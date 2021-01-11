@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "vacuole",
+	"version": "${version}",
+	"name": "Vacuole",
+	"description": "A home dimension for minigame players.",
+	"authors": [
+		"haykam821"
+	],
+	"contact": {
+		"homepage": "https://github.com/haykam821/Vacuole#readme",
+		"issues": "https://github.com/haykam821/Vacuole/issues"
+	},
+	"entrypoints": {
+		"main": [
+			"io.github.haykam821.vacuole.Main"
+		]
+	},
+	"license": "MIT",
+	"icon": "assets/vacuole/icon.png",
+	"depends": {
+		"fabricloader": ">=0.4.0",
+		"plasmid": ">=0.4.0"
+	}
+}
