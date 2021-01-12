@@ -42,6 +42,10 @@ public class Treasure {
 		return false;
 	}
 
+	public void tick() {
+		return;
+	}
+
 	// Getters
 	public TreasureType<?> getType() {
 		return this.type;

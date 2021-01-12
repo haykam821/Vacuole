@@ -102,6 +102,9 @@ public class VacuoleGame {
 		for (ServerPlayerEntity player : this.gameSpace.getPlayers()) {
 			this.respawnIfOutOfBounds(player);
 		}
+		for (Treasure treasure : this.treasures) {
+			treasure.tick();
+		}
 	}
 
 	private void addPlayer(ServerPlayerEntity player) {

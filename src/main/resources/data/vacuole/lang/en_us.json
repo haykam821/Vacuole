@@ -4,5 +4,6 @@
 	"text.vacuole.treasure_selector": "Treasure Selector (#%s)",
 	"treasure.vacuole.debug": "Debug",
 	"treasure.vacuole.downpour_shelter": "Downpour Shelter",
-	"treasure.vacuole.empty": "Empty"
+	"treasure.vacuole.empty": "Empty",
+	"treasure.vacuole.snake": "Snake"
 }
