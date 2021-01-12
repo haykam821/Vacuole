@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 public final class TreasureTypes {
 	public static final TreasureType<EmptyTreasure> EMPTY = register("empty", EmptyTreasure::new, Items.BARRIER);
 	public static final TreasureType<DebugTreasure> DEBUG = register("debug", DebugTreasure::new, Items.DEBUG_STICK);
+	public static final TreasureType<DownpourShelterTreasure> DOWNPOUR_SHELTER = register("downpour_shelter", DownpourShelterTreasure.CODEC, DownpourShelterTreasure::new, Items.RED_STAINED_GLASS);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {
 		Identifier id = new Identifier(Main.MOD_ID, path);

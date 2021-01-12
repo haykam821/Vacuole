@@ -10,6 +10,8 @@ import io.github.haykam821.vacuole.treasure.Treasure;
 import io.github.haykam821.vacuole.treasure.TreasureCanvas;
 import io.github.haykam821.vacuole.treasure.selector.TreasureSelector;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -54,7 +56,7 @@ public class VacuoleGame {
 		game.setRule(GameRule.HUNGER, RuleResult.DENY);
 		game.setRule(GameRule.PLACE_BLOCKS, RuleResult.DENY);
 		game.setRule(GameRule.PORTALS, RuleResult.DENY);
-		game.setRule(GameRule.PVP, RuleResult.DENY);
+		game.setRule(GameRule.PVP, RuleResult.ALLOW);
 		game.setRule(GameRule.TEAM_CHAT, RuleResult.DENY);
 		game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
 		game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
@@ -106,7 +108,16 @@ public class VacuoleGame {
 		this.spawn(player);
 	}
 
-	private ActionResult onPlayerDamage(ServerPlayerEntity damagedPlayer, DamageSource source, float damage) {
+	private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float damage) {
+		for (Treasure treasure : this.treasures) {
+			if (treasure.contains(player.getBlockPos())) {
+				if (treasure.isKnockbackEnabled()) {
+					player.applyStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 0, 127, true, false));
+					return ActionResult.SUCCESS;
+				}
+				break;
+			}
+		}
 		return ActionResult.FAIL;
 	}
 

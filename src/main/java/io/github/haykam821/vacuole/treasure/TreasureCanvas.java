@@ -42,6 +42,10 @@ public class TreasureCanvas {
 		return this.bottomCenter;
 	}
 
+	public boolean contains(BlockPos pos) {
+		return this.bounds.contains(pos);
+	}
+
 	public boolean setBlockState(BlockPos pos, BlockState state) {
 		if (!this.bounds.contains(pos)) {
 			LOGGER.warn("Attempted to modify block outside of canvas: {}", pos);

@@ -38,6 +38,10 @@ public class Treasure {
 		this.canvas.clear();
 	}
 
+	public boolean isKnockbackEnabled() {
+		return false;
+	}
+
 	// Getters
 	public TreasureType<?> getType() {
 		return this.type;
@@ -49,6 +53,10 @@ public class Treasure {
 
 	public void setCanvas(TreasureCanvas canvas) {
 		this.canvas = canvas;
+	}
+
+	public boolean contains(BlockPos pos) {
+		return this.canvas.contains(pos);
 	}
 
 	@Override
