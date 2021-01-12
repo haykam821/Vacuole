@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
@@ -161,7 +162,8 @@ public class VacuoleGame {
 
 	public void spawn(ServerPlayerEntity player) {
 		Vec3d spawn = this.map.getSpawn();
-		player.teleport(this.gameSpace.getWorld(), spawn.getX(), spawn.getY(), spawn.getZ(), 0, 0);
+		Vec2f rotation = this.map.getSpawnRotation();
+		player.teleport(this.gameSpace.getWorld(), spawn.getX(), spawn.getY(), spawn.getZ(), rotation.x, rotation.y);
 	}
 
 	public void respawnIfOutOfBounds(ServerPlayerEntity player) {
