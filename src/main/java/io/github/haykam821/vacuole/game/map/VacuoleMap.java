@@ -41,6 +41,10 @@ public class VacuoleMap {
 		return this.template.getMetadata().getRegions("treasure").iterator();
 	}
 
+	public Iterator<TemplateRegion> getTreasureSelectorRegions() {
+		return this.template.getMetadata().getRegions("treasure_selector").iterator();
+	}
+
 	public ChunkGenerator createGenerator(MinecraftServer server) {
 		return new TemplateChunkGenerator(server, this.template);
 	}

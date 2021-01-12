@@ -25,17 +25,10 @@ public class VacuoleConfig {
 	}
 
 	public Identifier getMap() {
-		return map;
+		return this.map;
 	}
 
 	public List<Treasure> getTreasures() {
-		return treasures;
-	}
-
-	public Treasure getTreasure(int index) {
-		if (index >= 0 && index < this.treasures.size()) {
-			return this.treasures.get(index);
-		}
-		return null;
+		return this.treasures;
 	}
 }

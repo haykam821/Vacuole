@@ -1,13 +1,19 @@
 package io.github.haykam821.vacuole.game;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import io.github.haykam821.vacuole.game.map.VacuoleMap;
 import io.github.haykam821.vacuole.game.map.VacuoleMapBuilder;
 import io.github.haykam821.vacuole.treasure.Treasure;
+import io.github.haykam821.vacuole.treasure.TreasureCanvas;
+import io.github.haykam821.vacuole.treasure.selector.TreasureSelector;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
@@ -20,6 +26,7 @@ import xyz.nucleoid.plasmid.game.event.GameTickListener;
 import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
 import xyz.nucleoid.plasmid.game.event.PlayerDamageListener;
 import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
+import xyz.nucleoid.plasmid.game.event.UseBlockListener;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
 import xyz.nucleoid.plasmid.game.rule.RuleResult;
 import xyz.nucleoid.plasmid.map.template.TemplateRegion;
@@ -28,11 +35,13 @@ public class VacuoleGame {
 	private final GameSpace gameSpace;
 	private final VacuoleMap map;
 	private final VacuoleConfig config;
+	private final List<Treasure> treasures;
 
 	public VacuoleGame(GameSpace gameSpace, VacuoleMap map, VacuoleConfig config) {
 		this.gameSpace = gameSpace;
 		this.map = map;
 		this.config = config;
+		this.treasures = new ArrayList<>(this.config.getTreasures());
 	}
 
 	public static void setRules(GameLogic game) {
@@ -42,7 +51,6 @@ public class VacuoleGame {
 		game.setRule(GameRule.DISMOUNT_VEHICLE, RuleResult.DENY);
 		game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
 		game.setRule(GameRule.HUNGER, RuleResult.DENY);
-		game.setRule(GameRule.INTERACTION, RuleResult.DENY);
 		game.setRule(GameRule.PLACE_BLOCKS, RuleResult.DENY);
 		game.setRule(GameRule.PORTALS, RuleResult.DENY);
 		game.setRule(GameRule.PVP, RuleResult.DENY);
@@ -69,6 +77,7 @@ public class VacuoleGame {
 			game.on(PlayerAddListener.EVENT, active::addPlayer);
 			game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
 			game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
+			game.on(UseBlockListener.EVENT, active::onUseBlock);
 		});
 	}
 
@@ -78,10 +87,10 @@ public class VacuoleGame {
 			TemplateRegion region = iterator.next();
 			int index = region.getData().getInt("Index");
 
-			Treasure treasure = this.config.getTreasure(index);
+			Treasure treasure = this.getTreasure(index);
 			if (treasure != null) {
-				treasure.setBounds(region.getBounds());
-				treasure.build(this.gameSpace.getWorld());
+				treasure.setCanvas(new TreasureCanvas(this.gameSpace.getWorld(), region.getBounds()));
+				treasure.build();
 			}
 		}
 	}
@@ -103,6 +112,51 @@ public class VacuoleGame {
 	private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
 		this.spawn(player);
 		return ActionResult.FAIL;
+	}
+
+	private ActionResult onUseBlock(ServerPlayerEntity player, Hand hand, BlockHitResult hitResult) {
+		Iterator<TemplateRegion> iterator = this.map.getTreasureSelectorRegions();
+		while (iterator.hasNext()) {
+			TemplateRegion region = iterator.next();
+			if (region.getBounds().contains(hitResult.getBlockPos())) {
+				int index = region.getData().getInt("Index");
+				player.openHandledScreen(TreasureSelector.build(this, index));
+
+				return ActionResult.SUCCESS;
+			}
+		}
+
+		return ActionResult.FAIL;
+	}
+
+	// Utilities
+	private Treasure getTreasure(int index) {
+		if (index >= 0 && index < this.treasures.size()) {
+			return this.treasures.get(index);
+		}
+		return null;
+	}
+
+	public boolean selectTreasure(int index, Treasure treasure) {
+		if (index < 0 || index >= this.treasures.size()) {
+			return false;
+		}
+
+		Iterator<TemplateRegion> iterator = this.map.getTreasureRegions();
+		while (iterator.hasNext()) {
+			TemplateRegion region = iterator.next();
+			int regionIndex = region.getData().getInt("Index");
+
+			if (regionIndex == index) {
+				this.treasures.get(index).clear();
+				treasure.setCanvas(new TreasureCanvas(this.gameSpace.getWorld(), region.getBounds()));
+				this.treasures.set(index, treasure);
+				treasure.build();
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public void spawn(ServerPlayerEntity player) {

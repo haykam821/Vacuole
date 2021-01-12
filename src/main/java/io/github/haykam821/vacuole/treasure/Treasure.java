@@ -4,39 +4,38 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import xyz.nucleoid.plasmid.util.BlockBounds;
 
 public class Treasure {
 	public static final Codec<Treasure> TYPE_CODEC = TreasureType.REGISTRY.dispatch(Treasure::getType, TreasureType::getCodec);
 	private static final BlockState BASE = Blocks.GRAY_TERRACOTTA.getDefaultState();
 
 	private final TreasureType<?> type;
-	private final Item displayItem;
-	private BlockBounds bounds = new BlockBounds(BlockPos.ORIGIN, BlockPos.ORIGIN);
+	protected TreasureCanvas canvas;
 
-	public Treasure(TreasureType<?> type, Item displayItem) {
+	public Treasure(TreasureType<?> type) {
 		this.type = type;
-		this.displayItem = displayItem;
 	}
 
 	// World modification
-	private void buildBase(ServerWorld world) {
-		BlockPos.Mutable pos = this.bounds.getMin().mutableCopy();
-		for (int x = this.bounds.getMin().getX(); x <= this.bounds.getMax().getX(); x++) {
+	private void buildBase() {
+		BlockPos.Mutable pos = this.canvas.getMin().mutableCopy();
+		for (int x = this.canvas.getMin().getX(); x <= this.canvas.getMax().getX(); x++) {
 			pos.setX(x);
-			for (int z = this.bounds.getMin().getZ(); z <= this.bounds.getMax().getZ(); z++) {
+			for (int z = this.canvas.getMin().getZ(); z <= this.canvas.getMax().getZ(); z++) {
 				pos.setZ(z);
-				world.setBlockState(pos, BASE);
+				this.canvas.setBlockState(pos, BASE);
 			}
 		}
 	}
 
-	public void build(ServerWorld world) {
-		this.buildBase(world);
+	public void build() {
+		this.buildBase();
+	}
+
+	public void clear() {
+		this.canvas.clear();
 	}
 
 	// Getters
@@ -44,24 +43,16 @@ public class Treasure {
 		return this.type;
 	}
 
-	public Item getDisplayItem() {
-		return this.displayItem;
-	}
-
 	public Text getName() {
 		return this.type.getName();
 	}
 
-	public BlockBounds getBounds() {
-		return this.bounds;
-	}
-
-	public void setBounds(BlockBounds bounds) {
-		this.bounds = bounds;
+	public void setCanvas(TreasureCanvas canvas) {
+		this.canvas = canvas;
 	}
 
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "{displayItem=" + this.displayItem + "}";
+		return this.getClass().getSimpleName() + "{type=" + this.type + ", canvas=" + this.canvas + "}";
 	}
 }
