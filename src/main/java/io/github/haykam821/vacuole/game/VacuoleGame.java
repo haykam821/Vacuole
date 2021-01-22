@@ -115,7 +115,7 @@ public class VacuoleGame {
 		for (Treasure treasure : this.treasures) {
 			if (treasure.contains(player.getBlockPos())) {
 				if (treasure.isKnockbackEnabled()) {
-					player.applyStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 0, 127, true, false));
+					player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 0, 127, true, false));
 					return ActionResult.SUCCESS;
 				}
 				break;
