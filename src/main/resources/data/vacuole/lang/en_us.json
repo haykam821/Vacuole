@@ -1,4 +1,6 @@
 {
+	"command.vacuole.treasure.list.entry": " - %s",
+	"command.vacuole.treasure.list.header": "There are %s treasure types:",
 	"gameType.vacuole.vacuole": "Vacuole",
 	"text.vacuole.template_load_failed": "Failed to load the map template",
 	"text.vacuole.treasure_selector": "Treasure Selector (#%s)",
