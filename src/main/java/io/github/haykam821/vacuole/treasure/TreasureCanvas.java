@@ -1,10 +1,16 @@
 package io.github.haykam821.vacuole.treasure;
 
+import java.util.List;
+
+import com.google.common.base.Predicates;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.plasmid.util.BlockBounds;
@@ -66,5 +72,9 @@ public class TreasureCanvas {
 		for (BlockPos pos : this.bounds) {
 			this.world.setBlockState(pos, AIR);
 		}
+	}
+
+	public <T extends Entity> List<T> getEntitiesByType(EntityType<T> type) {
+		return this.world.getEntitiesByType(type, this.bounds.toBox(), Predicates.alwaysTrue());
 	}
 }

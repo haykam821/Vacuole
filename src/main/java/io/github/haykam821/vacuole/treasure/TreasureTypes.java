@@ -13,6 +13,7 @@ public final class TreasureTypes {
 	public static final TreasureType<EmptyTreasure> EMPTY = register("empty", EmptyTreasure::new, Items.BARRIER);
 	public static final TreasureType<DebugTreasure> DEBUG = register("debug", DebugTreasure::new, Items.DEBUG_STICK);
 	public static final TreasureType<DownpourShelterTreasure> DOWNPOUR_SHELTER = register("downpour_shelter", DownpourShelterTreasure.CODEC, DownpourShelterTreasure::new, Items.RED_STAINED_GLASS);
+	public static final TreasureType<MinefieldTreasure> MINEFIELD = register("minefield", MinefieldTreasure.CODEC, MinefieldTreasure::new, Items.STONE_PRESSURE_PLATE);
 	public static final TreasureType<SnakeTreasure> SNAKE = register("snake", SnakeTreasure.CODEC, SnakeTreasure::new, Items.LIME_TERRACOTTA);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {

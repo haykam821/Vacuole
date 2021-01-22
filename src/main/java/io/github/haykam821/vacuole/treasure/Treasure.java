@@ -19,13 +19,17 @@ public class Treasure {
 	}
 
 	// World modification
+	protected BlockState getBase(BlockPos pos) {
+		return BASE;
+	}
+
 	private void buildBase() {
 		BlockPos.Mutable pos = this.canvas.getMin().mutableCopy();
 		for (int x = this.canvas.getMin().getX(); x <= this.canvas.getMax().getX(); x++) {
 			pos.setX(x);
 			for (int z = this.canvas.getMin().getZ(); z <= this.canvas.getMax().getZ(); z++) {
 				pos.setZ(z);
-				this.canvas.setBlockState(pos, BASE);
+				this.canvas.setBlockState(pos, this.getBase(pos));
 			}
 		}
 	}
