@@ -1,6 +1,6 @@
 {
 	"type": "vacuole:vacuole",
-	"name": "Vacuole",
+	"name": "Vacuole: Cloud",
 	"map": "vacuole:cloud",
 	"treasures": [{
 		"type": "vacuole:empty"

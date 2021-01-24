@@ -1,0 +1,10 @@
+{
+	"type": "vacuole:vacuole",
+	"name": "Vacuole: Dual Cloud",
+	"map": "vacuole:dual_cloud",
+	"treasures": [{
+		"type": "vacuole:empty"
+	}, {
+		"type": "vacuole:empty"
+	}]
+}
