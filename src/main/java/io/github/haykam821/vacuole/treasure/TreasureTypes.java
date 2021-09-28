@@ -17,6 +17,7 @@ public final class TreasureTypes {
 	public static final TreasureType<SnakeTreasure> SNAKE = register("snake", SnakeTreasure.CODEC, SnakeTreasure::new, Items.LIME_TERRACOTTA);
 	public static final TreasureType<PyramidTreasure> PYRAMID = register("pyramid", PyramidTreasure.CODEC, PyramidTreasure::new, Items.SANDSTONE_STAIRS);
 	public static final TreasureType<CheckerboardTreasure> CHECKERBOARD = register("checkerboard", CheckerboardTreasure.CODEC, CheckerboardTreasure::new, Items.WAXED_OXIDIZED_CUT_COPPER);
+	public static final TreasureType<StaircaseTreasure> STAIRCASE = register("staircase", StaircaseTreasure.CODEC, StaircaseTreasure::new, Items.BRICK_STAIRS);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {
 		Identifier id = new Identifier(Main.MOD_ID, path);
