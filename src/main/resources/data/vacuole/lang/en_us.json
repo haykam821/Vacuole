@@ -6,6 +6,7 @@
 	"gameType.vacuole.vacuole": "Vacuole",
 	"text.vacuole.template_load_failed": "Failed to load the map template",
 	"text.vacuole.treasure_selector": "Treasure Selector (#%s)",
+	"treasure.vacuole.checkerboard": "Checkerboard",
 	"treasure.vacuole.debug": "Debug",
 	"treasure.vacuole.downpour_shelter": "Downpour Shelter",
 	"treasure.vacuole.empty": "Empty",
