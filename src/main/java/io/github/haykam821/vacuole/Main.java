@@ -13,7 +13,7 @@ public class Main implements ModInitializer {
 	public static final String MOD_ID = "vacuole";
 
 	private static final Identifier VACUOLE_ID = new Identifier(MOD_ID, "vacuole");
-	public static final GameType<VacuoleConfig> VACUOLE_TYPE = GameType.register(VACUOLE_ID, VacuoleGame::open, VacuoleConfig.CODEC);
+	public static final GameType<VacuoleConfig> VACUOLE_TYPE = GameType.register(VACUOLE_ID, VacuoleConfig.CODEC, VacuoleGame::open);
 
 	@Override
 	public void onInitialize() {

@@ -41,15 +41,15 @@ public class DownpourShelterTreasure extends Treasure {
 		int upperRadius = (int) Math.ceil(size / (float) 2);
 		int lowerRadius = (int) Math.floor(size / (float) 2);
 
-		BlockBox box = new BlockBox(this.canvas.getBottomCenter().add(-lowerRadius, 1, -lowerRadius), this.canvas.getBottomCenter().add(upperRadius, 7, upperRadius));
-		BlockBox outerBox = new BlockBox(box.minX - 1, box.minY, box.minZ - 1, box.maxX + 1, box.maxY, box.maxZ + 1);
+		BlockBox box = BlockBox.create(this.canvas.getBottomCenter().add(-lowerRadius, 1, -lowerRadius), this.canvas.getBottomCenter().add(upperRadius, 7, upperRadius));
+		BlockBox outerBox = new BlockBox(box.getMinX() - 1, box.getMinY(), box.getMinZ() - 1, box.getMaxX() + 1, box.getMaxY(), box.getMaxZ() + 1);
 
-		for (BlockPos pos : BlockPos.iterate(outerBox.minX, outerBox.minY, outerBox.minZ, outerBox.maxX, outerBox.maxY, outerBox.maxZ)) {
+		for (BlockPos pos : BlockPos.iterate(outerBox.getMinX(), outerBox.getMinY(), outerBox.getMinZ(), outerBox.getMaxX(), outerBox.getMaxY(), outerBox.getMaxZ())) {
 			if (this.locked && !box.contains(pos)) {
 				this.canvas.setBlockState(pos, GLASS);
-			} else if (pos.getY() == box.minY) {
+			} else if (pos.getY() == box.getMinY()) {
 				this.canvas.setBlockState(pos, FLOOR);
-			} else if (pos.getY() == box.maxY) {
+			} else if (pos.getY() == box.getMaxY()) {
 				this.canvas.setBlockState(pos, ROOF);
 			}
 		}

@@ -15,7 +15,7 @@ import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 
 public class TreasureType<T extends Treasure> {
-	public static final TinyRegistry<TreasureType<?>> REGISTRY = TinyRegistry.newStable();
+	public static final TinyRegistry<TreasureType<?>> REGISTRY = TinyRegistry.create();
 
 	private final Codec<T> codec;
 	private final Supplier<T> creator;

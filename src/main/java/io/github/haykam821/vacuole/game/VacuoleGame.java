@@ -13,78 +13,80 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import xyz.nucleoid.fantasy.BubbleWorldConfig;
-import xyz.nucleoid.plasmid.game.GameLogic;
+import xyz.nucleoid.fantasy.RuntimeWorldConfig;
+import xyz.nucleoid.map_templates.TemplateRegion;
+import xyz.nucleoid.plasmid.game.GameActivity;
 import xyz.nucleoid.plasmid.game.GameOpenContext;
 import xyz.nucleoid.plasmid.game.GameOpenProcedure;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.event.GameOpenListener;
-import xyz.nucleoid.plasmid.game.event.GameTickListener;
-import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
-import xyz.nucleoid.plasmid.game.event.PlayerDamageListener;
-import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
-import xyz.nucleoid.plasmid.game.event.UseBlockListener;
-import xyz.nucleoid.plasmid.game.rule.GameRule;
-import xyz.nucleoid.plasmid.game.rule.RuleResult;
-import xyz.nucleoid.plasmid.map.template.TemplateRegion;
+import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
+import xyz.nucleoid.plasmid.game.player.PlayerOffer;
+import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
+import xyz.nucleoid.plasmid.game.rule.GameRuleType;
+import xyz.nucleoid.stimuli.event.block.BlockUseEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerDamageEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 
 public class VacuoleGame {
 	private final GameSpace gameSpace;
+	private final ServerWorld world;
 	private final VacuoleMap map;
 	private final VacuoleConfig config;
 	private final List<Treasure> treasures;
 
-	public VacuoleGame(GameSpace gameSpace, VacuoleMap map, VacuoleConfig config) {
+	public VacuoleGame(GameSpace gameSpace, ServerWorld world, VacuoleMap map, VacuoleConfig config) {
 		this.gameSpace = gameSpace;
+		this.world = world;
 		this.map = map;
 		this.config = config;
 		this.treasures = new ArrayList<>(this.config.getTreasures());
 	}
 
-	public static void setRules(GameLogic game) {
-		game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
-		game.setRule(GameRule.BREAK_BLOCKS, RuleResult.DENY);
-		game.setRule(GameRule.CRAFTING, RuleResult.DENY);
-		game.setRule(GameRule.DISMOUNT_VEHICLE, RuleResult.DENY);
-		game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-		game.setRule(GameRule.HUNGER, RuleResult.DENY);
-		game.setRule(GameRule.PLACE_BLOCKS, RuleResult.DENY);
-		game.setRule(GameRule.PORTALS, RuleResult.DENY);
-		game.setRule(GameRule.PVP, RuleResult.ALLOW);
-		game.setRule(GameRule.TEAM_CHAT, RuleResult.DENY);
-		game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
-		game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
+	public static void setRules(GameActivity activity) {
+		activity.deny(GameRuleType.BLOCK_DROPS);
+		activity.deny(GameRuleType.BREAK_BLOCKS);
+		activity.deny(GameRuleType.CRAFTING);
+		activity.deny(GameRuleType.DISMOUNT_VEHICLE);
+		activity.deny(GameRuleType.FALL_DAMAGE);
+		activity.deny(GameRuleType.HUNGER);
+		activity.deny(GameRuleType.PLACE_BLOCKS);
+		activity.deny(GameRuleType.PORTALS);
+		activity.allow(GameRuleType.PVP);
+		activity.deny(GameRuleType.THROW_ITEMS);
+		activity.deny(GameRuleType.UNSTABLE_TNT);
 	}
 
 	public static GameOpenProcedure open(GameOpenContext<VacuoleConfig> context) {
-		VacuoleConfig config = context.getConfig();
-		VacuoleMap map = new VacuoleMapBuilder(config).build();
+		VacuoleConfig config = context.config();
+		VacuoleMap map = new VacuoleMapBuilder(config).build(context.server());
 
-		BubbleWorldConfig worldConfig = new BubbleWorldConfig()
-			.setGenerator(map.createGenerator(context.getServer()))
-			.setDefaultGameMode(GameMode.ADVENTURE);
+		RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()
+			.setGenerator(map.createGenerator(context.server()));
 
-		return context.createOpenProcedure(worldConfig, game -> {
-			VacuoleGame active = new VacuoleGame(game.getSpace(), map, config);
-			VacuoleGame.setRules(game);
+		return context.openWithWorld(worldConfig, (activity, world) -> {
+			VacuoleGame active = new VacuoleGame(activity.getGameSpace(), world, map, config);
+			VacuoleGame.setRules(activity);
 
 			// Listeners
-			game.on(GameOpenListener.EVENT, active::open);
-			game.on(GameTickListener.EVENT, active::tick);
-			game.on(PlayerAddListener.EVENT, active::addPlayer);
-			game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
-			game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
-			game.on(UseBlockListener.EVENT, active::onUseBlock);
+			activity.listen(GameActivityEvents.ENABLE, active::enable);
+			activity.listen(GameActivityEvents.TICK, active::tick);
+			activity.listen(GamePlayerEvents.ADD, active::addPlayer);
+			activity.listen(GamePlayerEvents.OFFER, active::offerPlayer);
+			activity.listen(PlayerDamageEvent.EVENT, active::onPlayerDamage);
+			activity.listen(PlayerDeathEvent.EVENT, active::onPlayerDeath);
+			activity.listen(BlockUseEvent.EVENT, active::onUseBlock);
 		});
 	}
 
-	private void open() {
+	private void enable() {
 		Iterator<TemplateRegion> iterator = this.map.getTreasureRegions();
 		while (iterator.hasNext()) {
 			TemplateRegion region = iterator.next();
@@ -92,7 +94,7 @@ public class VacuoleGame {
 
 			Treasure treasure = this.getTreasure(index);
 			if (treasure != null) {
-				treasure.setCanvas(new TreasureCanvas(this.gameSpace.getWorld(), region.getBounds()));
+				treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds()));
 				treasure.build();
 			}
 		}
@@ -109,6 +111,12 @@ public class VacuoleGame {
 
 	private void addPlayer(ServerPlayerEntity player) {
 		this.spawn(player);
+	}
+
+	private PlayerOfferResult offerPlayer(PlayerOffer offer) {
+		return offer.accept(this.world, this.map.getSpawn()).and(() -> {
+			offer.player().changeGameMode(GameMode.ADVENTURE);
+		});
 	}
 
 	private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float damage) {
@@ -135,7 +143,7 @@ public class VacuoleGame {
 			TemplateRegion region = iterator.next();
 			if (region.getBounds().contains(hitResult.getBlockPos())) {
 				int index = region.getData().getInt("Index");
-				player.openHandledScreen(TreasureSelector.build(this, index));
+				TreasureSelector.build(player, this, index).open();
 
 				return ActionResult.SUCCESS;
 			}
@@ -164,7 +172,7 @@ public class VacuoleGame {
 
 			if (regionIndex == index) {
 				this.treasures.get(index).clear();
-				treasure.setCanvas(new TreasureCanvas(this.gameSpace.getWorld(), region.getBounds()));
+				treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds()));
 				this.treasures.set(index, treasure);
 				treasure.build();
 				return true;
@@ -177,7 +185,7 @@ public class VacuoleGame {
 	public void spawn(ServerPlayerEntity player) {
 		Vec3d spawn = this.map.getSpawn();
 		Vec2f rotation = this.map.getSpawnRotation();
-		player.teleport(this.gameSpace.getWorld(), spawn.getX(), spawn.getY(), spawn.getZ(), rotation.x, rotation.y);
+		player.teleport(this.world, spawn.getX(), spawn.getY(), spawn.getZ(), rotation.x, rotation.y);
 	}
 
 	public void respawnIfOutOfBounds(ServerPlayerEntity player) {

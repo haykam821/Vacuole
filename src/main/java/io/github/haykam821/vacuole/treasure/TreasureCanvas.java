@@ -13,7 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import xyz.nucleoid.plasmid.util.BlockBounds;
+import xyz.nucleoid.map_templates.BlockBounds;
 
 public class TreasureCanvas {
 	private static final Logger LOGGER = LogManager.getLogger("TreasureCanvas");
@@ -28,16 +28,16 @@ public class TreasureCanvas {
 		this.world = world;
 		this.bounds = bounds;
 
-		this.center = new BlockPos(bounds.getCenter());
-		this.bottomCenter = new BlockPos(this.center.getX(), bounds.getMin().getY(), this.center.getZ());
+		this.center = new BlockPos(bounds.center());
+		this.bottomCenter = new BlockPos(this.center.getX(), bounds.min().getY(), this.center.getZ());
 	}
 
 	public BlockPos getMin() {
-		return this.bounds.getMin();
+		return this.bounds.min();
 	}
 
 	public BlockPos getMax() {
-		return this.bounds.getMax();
+		return this.bounds.max();
 	}
 
 	public BlockPos getCenter() {
@@ -75,6 +75,6 @@ public class TreasureCanvas {
 	}
 
 	public <T extends Entity> List<T> getEntitiesByType(EntityType<T> type) {
-		return this.world.getEntitiesByType(type, this.bounds.toBox(), Predicates.alwaysTrue());
+		return this.world.getEntitiesByType(type, this.bounds.asBox(), Predicates.alwaysTrue());
 	}
 }

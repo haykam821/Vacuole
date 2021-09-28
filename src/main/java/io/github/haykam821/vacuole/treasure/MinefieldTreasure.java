@@ -67,9 +67,9 @@ public class MinefieldTreasure extends Treasure {
 	@Override
 	public void tick() {
 		for (TntEntity tnt : this.canvas.getEntitiesByType(EntityType.TNT)) {
-			if (tnt.getFuseTimer() <= 5) {
-				tnt.remove();
-			} else if (tnt.getFuseTimer() == 79) {
+			if (tnt.getFuse() <= 5) {
+				tnt.discard();
+			} else if (tnt.getFuse() == 79) {
 				this.canvas.setBlockState(tnt.getBlockPos(), BARRIER);
 				this.canvas.setBlockState(tnt.getBlockPos().up(), AIR);
 			}

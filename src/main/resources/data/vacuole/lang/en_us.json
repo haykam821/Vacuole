@@ -1,6 +1,8 @@
 {
 	"command.vacuole.treasure.list.entry": " - %s",
 	"command.vacuole.treasure.list.header": "There are %s treasure types:",
+	"game.vacuole.cloud_vacuole": "Vacuole: Cloud",
+	"game.vacuole.dual_cloud_vacuole": "Vacuole: Dual Cloud",
 	"gameType.vacuole.vacuole": "Vacuole",
 	"text.vacuole.template_load_failed": "Failed to load the map template",
 	"text.vacuole.treasure_selector": "Treasure Selector (#%s)",

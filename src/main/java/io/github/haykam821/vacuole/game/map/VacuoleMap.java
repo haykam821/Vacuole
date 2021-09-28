@@ -9,10 +9,10 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import xyz.nucleoid.plasmid.map.template.MapTemplate;
-import xyz.nucleoid.plasmid.map.template.TemplateChunkGenerator;
-import xyz.nucleoid.plasmid.map.template.TemplateRegion;
-import xyz.nucleoid.plasmid.util.BlockBounds;
+import xyz.nucleoid.map_templates.BlockBounds;
+import xyz.nucleoid.map_templates.MapTemplate;
+import xyz.nucleoid.map_templates.TemplateRegion;
+import xyz.nucleoid.plasmid.game.world.generator.TemplateChunkGenerator;
 
 public class VacuoleMap {
 	private final MapTemplate template;
@@ -20,7 +20,7 @@ public class VacuoleMap {
 
 	public VacuoleMap(MapTemplate template) {
 		this.template = template;
-		this.box = this.template.getBounds().toBox().expand(10);
+		this.box = this.template.getBounds().asBox().expand(10);
 	}
 
 	public MapTemplate getTemplate() {
@@ -63,7 +63,7 @@ public class VacuoleMap {
 	}
 
 	private static Vec3d getBottomCenter(BlockBounds bounds) {
-		Vec3d center = bounds.getCenter();
-		return new Vec3d(center.getX(), bounds.getMin().getY(), center.getZ());
+		Vec3d center = bounds.center();
+		return new Vec3d(center.getX(), bounds.min().getY(), center.getZ());
 	}
 }
