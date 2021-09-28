@@ -17,6 +17,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -31,6 +33,7 @@ import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
 import xyz.nucleoid.plasmid.game.player.PlayerOffer;
 import xyz.nucleoid.plasmid.game.player.PlayerOfferResult;
 import xyz.nucleoid.plasmid.game.rule.GameRuleType;
+import xyz.nucleoid.stimuli.event.block.BlockPunchEvent;
 import xyz.nucleoid.stimuli.event.block.BlockUseEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDamageEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
@@ -82,6 +85,7 @@ public class VacuoleGame {
 			activity.listen(GamePlayerEvents.OFFER, active::offerPlayer);
 			activity.listen(PlayerDamageEvent.EVENT, active::onPlayerDamage);
 			activity.listen(PlayerDeathEvent.EVENT, active::onPlayerDeath);
+			activity.listen(BlockPunchEvent.EVENT, active::onPunchBlock);
 			activity.listen(BlockUseEvent.EVENT, active::onUseBlock);
 		});
 	}
@@ -137,6 +141,17 @@ public class VacuoleGame {
 		return ActionResult.FAIL;
 	}
 
+	private ActionResult onPunchBlock(ServerPlayerEntity player, Direction direction, BlockPos pos) {
+		for (Treasure treasure : this.treasures) {
+			if (treasure.contains(pos)) {
+				treasure.onPunchBlock(player, pos);
+				break;
+			}
+		}
+
+		return ActionResult.FAIL;
+	}
+
 	private ActionResult onUseBlock(ServerPlayerEntity player, Hand hand, BlockHitResult hitResult) {
 		Iterator<TemplateRegion> iterator = this.map.getTreasureSelectorRegions();
 		while (iterator.hasNext()) {
@@ -146,6 +161,13 @@ public class VacuoleGame {
 				TreasureSelector.build(player, this, index).open();
 
 				return ActionResult.SUCCESS;
+			}
+		}
+
+		for (Treasure treasure : this.treasures) {
+			if (treasure.contains(hitResult.getBlockPos())) {
+				treasure.onUseBlock(player, hitResult.getBlockPos());
+				break;
 			}
 		}
 

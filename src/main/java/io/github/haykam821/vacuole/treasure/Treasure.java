@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
@@ -47,6 +48,14 @@ public class Treasure {
 	}
 
 	public void tick() {
+		return;
+	}
+
+	public void onPunchBlock(ServerPlayerEntity player, BlockPos pos) {
+		return;
+	}
+
+	public void onUseBlock(ServerPlayerEntity player, BlockPos pos) {
 		return;
 	}
 

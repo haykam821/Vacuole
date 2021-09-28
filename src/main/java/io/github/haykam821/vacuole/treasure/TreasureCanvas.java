@@ -77,4 +77,12 @@ public class TreasureCanvas {
 	public <T extends Entity> List<T> getEntitiesByType(EntityType<T> type) {
 		return this.world.getEntitiesByType(type, this.bounds.asBox(), Predicates.alwaysTrue());
 	}
+
+	public <T extends Entity> List<T> getEntitiesByClass(Class<T> clazz) {
+		return this.world.getEntitiesByClass(clazz, this.bounds.asBox(), Predicates.alwaysTrue());
+	}
+
+	public List<Entity> getEntities() {
+		return this.getEntitiesByClass(Entity.class);
+	}
 }
