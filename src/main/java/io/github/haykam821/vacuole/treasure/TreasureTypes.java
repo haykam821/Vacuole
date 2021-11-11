@@ -21,6 +21,7 @@ public final class TreasureTypes {
 	public static final TreasureType<ConveyorTreasure> CONVEYOR = register("conveyor", ConveyorTreasure.CODEC, ConveyorTreasure::new, Items.MAGENTA_GLAZED_TERRACOTTA);
 	public static final TreasureType<CenterTreasure> CENTER = register("center", CenterTreasure.CODEC, CenterTreasure::new, Items.END_ROD);
 	public static final TreasureType<SierpinskiCarpetTreasure> SIERPINSKI_CARPET = register("sierpinski_carpet", SierpinskiCarpetTreasure.CODEC, SierpinskiCarpetTreasure::new, Items.MOSS_CARPET);
+	public static final TreasureType<BinaryTimerTreasure> BINARY_TIMER = register("binary_timer", BinaryTimerTreasure.CODEC, BinaryTimerTreasure::new, Items.CLOCK);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {
 		Identifier id = new Identifier(Main.MOD_ID, path);
