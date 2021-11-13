@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.map_templates.BlockBounds;
@@ -84,5 +85,11 @@ public class TreasureCanvas {
 
 	public List<Entity> getEntities() {
 		return this.getEntitiesByClass(Entity.class);
+	}
+
+	public PlayerEntity getClosestPlayer(BlockPos pos) {
+		return this.world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, -1, player -> {
+			return this.bounds.asBox().intersects(player.getBoundingBox());
+		});
 	}
 }
