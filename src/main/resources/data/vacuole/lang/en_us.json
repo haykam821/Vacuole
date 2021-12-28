@@ -7,6 +7,7 @@
 	"text.vacuole.template_load_failed": "Failed to load the map template",
 	"text.vacuole.treasure_selector": "Treasure Selector (#%s)",
 	"treasure.vacuole.binary_timer": "Binary Timer",
+	"treasure.vacuole.bounce": "Bounce",
 	"treasure.vacuole.center": "Center",
 	"treasure.vacuole.checkerboard": "Checkerboard",
 	"treasure.vacuole.conveyor": "Conveyor",

@@ -24,6 +24,7 @@ public final class TreasureTypes {
 	public static final TreasureType<BinaryTimerTreasure> BINARY_TIMER = register("binary_timer", BinaryTimerTreasure.CODEC, BinaryTimerTreasure::new, Items.CLOCK);
 	public static final TreasureType<SkullsTreasure> SKULLS = register("skulls", SkullsTreasure.CODEC, SkullsTreasure::new, Items.SKELETON_SKULL);
 	public static final TreasureType<SpiralTreasure> SPIRAL = register("spiral", SpiralTreasure.CODEC, SpiralTreasure::new, Items.PURPUR_PILLAR);
+	public static final TreasureType<BounceTreasure> BOUNCE = register("bounce", BounceTreasure.CODEC, BounceTreasure::new, Items.SLIME_BALL);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {
 		Identifier id = new Identifier(Main.MOD_ID, path);
