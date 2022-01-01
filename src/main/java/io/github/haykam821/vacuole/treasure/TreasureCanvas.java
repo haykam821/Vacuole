@@ -1,12 +1,14 @@
 package io.github.haykam821.vacuole.treasure;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.google.common.base.Predicates;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +18,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.map_templates.BlockBounds;
@@ -28,13 +31,17 @@ public class TreasureCanvas {
 	private final BlockBounds bounds;
 	private final BlockPos center;
 	private final BlockPos bottomCenter;
+	private final UUID creator;
+	private boolean locked = false;
 
-	public TreasureCanvas(ServerWorld world, BlockBounds bounds) {
+	public TreasureCanvas(ServerWorld world, BlockBounds bounds, UUID creator) {
 		this.world = world;
 		this.bounds = bounds;
 
 		this.center = new BlockPos(bounds.center());
 		this.bottomCenter = new BlockPos(this.center.getX(), bounds.min().getY(), this.center.getZ());
+		
+		this.creator = creator;
 	}
 
 	public BlockPos getMin() {
@@ -106,13 +113,27 @@ public class TreasureCanvas {
 	}
 
 	public PlayerEntity getClosestPlayer(BlockPos pos) {
-		return this.world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, -1, player -> {
-			return this.bounds.asBox().intersects(player.getBoundingBox());
+		return this.world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, -1, entity -> {
+			ServerPlayerEntity player = (ServerPlayerEntity) entity;
+			return this.bounds.asBox().intersects(player.getBoundingBox()) && this.isModifiable(player);
 		});
 	}
 
 	public FireworkRocketEntity spawnFirework(ItemStack stack, BlockPos pos) {
 		FireworkRocketEntity firework = new FireworkRocketEntity(this.world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack);
 		return this.world.spawnEntity(firework) ? firework : null;
+	}
+
+	public TriState toggleLocked() {
+		if (this.creator == null) {
+			return TriState.DEFAULT;
+		}
+
+		this.locked = !this.locked;
+		return TriState.of(this.locked);
+	}
+
+	public boolean isModifiable(ServerPlayerEntity player) {
+		return !this.locked || this.creator == null || this.creator.equals(player.getUuid());
 	}
 }

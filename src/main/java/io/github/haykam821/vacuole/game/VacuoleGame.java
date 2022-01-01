@@ -9,12 +9,16 @@ import io.github.haykam821.vacuole.game.map.VacuoleMapBuilder;
 import io.github.haykam821.vacuole.treasure.Treasure;
 import io.github.haykam821.vacuole.treasure.TreasureCanvas;
 import io.github.haykam821.vacuole.treasure.selector.TreasureSelector;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -98,7 +102,7 @@ public class VacuoleGame {
 
 			Treasure treasure = this.getTreasure(index);
 			if (treasure != null) {
-				treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds()));
+				treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds(), null));
 				treasure.build();
 			}
 		}
@@ -152,13 +156,41 @@ public class VacuoleGame {
 		return ActionResult.FAIL;
 	}
 
+	private Text getToggleLockedMessage(TriState state, int index) {
+		int ordinal = index + 1;
+
+		switch (state) {
+			case TRUE:
+				return new TranslatableText("text.vacuole.toggle_locked.locked", ordinal).formatted(Formatting.GOLD);
+			case FALSE:
+				return new TranslatableText("text.vacuole.toggle_locked.unlocked", ordinal).formatted(Formatting.DARK_PURPLE);
+			case DEFAULT:
+			default:
+				return new TranslatableText("text.vacuole.toggle_locked.cannot", ordinal).formatted(Formatting.RED);
+		}
+	}
+
 	private ActionResult onUseBlock(ServerPlayerEntity player, Hand hand, BlockHitResult hitResult) {
+		if (hand != Hand.MAIN_HAND) return ActionResult.PASS;
+
 		Iterator<TemplateRegion> iterator = this.map.getTreasureSelectorRegions();
 		while (iterator.hasNext()) {
 			TemplateRegion region = iterator.next();
 			if (region.getBounds().contains(hitResult.getBlockPos())) {
 				int index = region.getData().getInt("Index");
-				TreasureSelector.build(player, this, index).open();
+
+				Treasure treasure = this.getTreasure(index);
+				if (!treasure.isModifiable(player)) {
+					player.sendMessage(new TranslatableText("text.vacuole.cannot_modify_treasure", index + 1).formatted(Formatting.RED), true);
+					return ActionResult.FAIL;
+				}
+
+				if (player.isSneaking()) {
+					TriState state = treasure.toggleLocked();
+					player.sendMessage(this.getToggleLockedMessage(state, index), true);
+				} else {
+					TreasureSelector.build(player, this, index).open();
+				}
 
 				return ActionResult.SUCCESS;
 			}
@@ -182,7 +214,7 @@ public class VacuoleGame {
 		return null;
 	}
 
-	public boolean selectTreasure(int index, Treasure treasure) {
+	public boolean selectTreasure(int index, Treasure treasure, ServerPlayerEntity player) {
 		if (index < 0 || index >= this.treasures.size()) {
 			return false;
 		}
@@ -193,11 +225,14 @@ public class VacuoleGame {
 			int regionIndex = region.getData().getInt("Index");
 
 			if (regionIndex == index) {
-				this.treasures.get(index).clear();
-				treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds()));
-				this.treasures.set(index, treasure);
-				treasure.build();
-				return true;
+				Treasure previousTreasure = this.treasures.get(index);
+				if (previousTreasure.isModifiable(player)) {
+					previousTreasure.clear();
+					treasure.setCanvas(new TreasureCanvas(this.world, region.getBounds(), player.getUuid()));
+					this.treasures.set(index, treasure);
+					treasure.build();
+					return true;
+				}
 			}
 		}
 

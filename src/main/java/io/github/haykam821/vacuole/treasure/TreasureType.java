@@ -50,7 +50,7 @@ public class TreasureType<T extends Treasure> {
 
 	public ShopEntry createShopEntry(VacuoleGame game, int index) {
 		return ShopEntry.ofIcon(this.icon).withName(this.getName()).withCost(Cost.free()).onBuy(player -> {
-			game.selectTreasure(index, this.create());
+			game.selectTreasure(index, this.create(), player);
 		});
 	}
 }

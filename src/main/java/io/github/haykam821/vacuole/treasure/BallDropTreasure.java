@@ -190,7 +190,7 @@ public class BallDropTreasure extends Treasure {
 
 	@Override
 	public void onUseBlock(ServerPlayerEntity player, BlockPos pos) {
-		if (this.getButtonPos().equals(pos)) {
+		if (this.getButtonPos().equals(pos) && this.isModifiable(player)) {
 			BlockState state = this.canvas.getBlockState(pos);
 			this.canvas.setBlockState(pos, state.getFluidState().getBlockState());
 

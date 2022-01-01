@@ -2,6 +2,7 @@ package io.github.haykam821.vacuole.treasure;
 
 import com.mojang.serialization.Codec;
 
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -74,6 +75,14 @@ public class Treasure {
 
 	public boolean contains(BlockPos pos) {
 		return this.canvas.contains(pos);
+	}
+
+	public TriState toggleLocked() {
+		return this.canvas.toggleLocked();
+	}
+
+	public boolean isModifiable(ServerPlayerEntity player) {
+		return this.canvas.isModifiable(player);
 	}
 
 	@Override

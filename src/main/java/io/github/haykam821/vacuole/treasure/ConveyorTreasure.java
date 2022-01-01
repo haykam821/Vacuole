@@ -92,7 +92,7 @@ public class ConveyorTreasure extends Treasure {
 	@Override
 	public void onPunchBlock(ServerPlayerEntity player, BlockPos pos) {
 		BlockState state = this.canvas.getBlockState(pos);
-		if (this.canBeChanged(state)) {
+		if (this.canBeChanged(state) && this.isModifiable(player)) {
 			this.canvas.setBlockState(pos, this.stillState);
 		}
 	}
@@ -100,7 +100,7 @@ public class ConveyorTreasure extends Treasure {
 	@Override
 	public void onUseBlock(ServerPlayerEntity player, BlockPos pos) {
 		BlockState state = this.canvas.getBlockState(pos);
-		if (this.canBeChanged(state)) {
+		if (this.canBeChanged(state) && this.isModifiable(player)) {
 			if (player.isSneaky()) {
 				this.canvas.setBlockState(pos, this.stillState);
 			} else {
