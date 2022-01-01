@@ -9,9 +9,13 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.FireworkRocketEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.map_templates.BlockBounds;
@@ -69,6 +73,20 @@ public class TreasureCanvas {
 		return this.world.getBlockState(pos);
 	}
 
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		if (!this.bounds.contains(pos)) {
+			return null;
+		}
+		return this.world.getBlockEntity(pos);
+	}
+
+	public <T extends BlockEntity> T getBlockEntity(BlockPos pos, BlockEntityType<T> type) {
+		if (!this.bounds.contains(pos)) {
+			return null;
+		}
+		return this.world.getBlockEntity(pos, type).orElse(null);
+	}
+
 	public void clear() {
 		for (BlockPos pos : this.bounds) {
 			this.world.setBlockState(pos, AIR);
@@ -91,5 +109,10 @@ public class TreasureCanvas {
 		return this.world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, -1, player -> {
 			return this.bounds.asBox().intersects(player.getBoundingBox());
 		});
+	}
+
+	public FireworkRocketEntity spawnFirework(ItemStack stack, BlockPos pos) {
+		FireworkRocketEntity firework = new FireworkRocketEntity(this.world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack);
+		return this.world.spawnEntity(firework) ? firework : null;
 	}
 }
