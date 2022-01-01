@@ -1,0 +1,11 @@
+{
+	"type": "vacuole:vacuole",
+	"map": "vacuole:amphitheater",
+	"treasures": [{
+		"type": "vacuole:empty"
+	}, {
+		"type": "vacuole:empty"
+	}, {
+		"type": "vacuole:empty"
+	}]
+}
