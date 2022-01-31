@@ -12,13 +12,12 @@ import net.minecraft.entity.TntEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class MinefieldTreasure extends Treasure {
 	public static final Codec<MinefieldTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(
-			BlockStateProvider.TYPE_CODEC.optionalFieldOf("floor_state_provider", new SimpleBlockStateProvider(Blocks.TNT.getDefaultState())).forGetter(treasure -> treasure.floorStateProvider),
-			BlockStateProvider.TYPE_CODEC.optionalFieldOf("mine_state_provider", new SimpleBlockStateProvider(Blocks.STONE_PRESSURE_PLATE.getDefaultState())).forGetter(treasure -> treasure.mineStateProvider),
+			BlockStateProvider.TYPE_CODEC.optionalFieldOf("floor_state_provider", BlockStateProvider.of(Blocks.TNT)).forGetter(treasure -> treasure.floorStateProvider),
+			BlockStateProvider.TYPE_CODEC.optionalFieldOf("mine_state_provider", BlockStateProvider.of(Blocks.STONE_PRESSURE_PLATE)).forGetter(treasure -> treasure.mineStateProvider),
 			Codec.DOUBLE.optionalFieldOf("mine_chance", 0.6).forGetter(treasure -> treasure.mineChance)
 		).apply(instance, MinefieldTreasure::new);
 	});
@@ -40,7 +39,7 @@ public class MinefieldTreasure extends Treasure {
 	}
 
 	public MinefieldTreasure() {
-		this(new SimpleBlockStateProvider(Blocks.TNT.getDefaultState()), new SimpleBlockStateProvider(Blocks.STONE_PRESSURE_PLATE.getDefaultState()), 0.6);
+		this(BlockStateProvider.of(Blocks.TNT), BlockStateProvider.of(Blocks.STONE_PRESSURE_PLATE), 0.6);
 	}
 
 	@Override

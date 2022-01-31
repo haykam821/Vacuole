@@ -10,10 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class SierpinskiCarpetTreasure extends Treasure {
-	private static final BlockStateProvider DEFAULT_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.MOSS_CARPET.getDefaultState());
+	private static final BlockStateProvider DEFAULT_STATE_PROVIDER = BlockStateProvider.of(Blocks.MOSS_CARPET);
 
 	public static final Codec<SierpinskiCarpetTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(

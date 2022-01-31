@@ -9,13 +9,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class BounceTreasure extends Treasure {
 	private static final Random RANDOM = new Random();
 
-	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.SLIME_BLOCK.getDefaultState());
-	private static final BlockStateProvider DEFAULT_TRAIL_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.LIME_CARPET.getDefaultState());
+	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = BlockStateProvider.of(Blocks.SLIME_BLOCK);
+	private static final BlockStateProvider DEFAULT_TRAIL_STATE_PROVIDER = BlockStateProvider.of(Blocks.LIME_CARPET);
 
 	public static final Codec<BounceTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(

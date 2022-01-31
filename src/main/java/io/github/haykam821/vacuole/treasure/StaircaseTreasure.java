@@ -17,7 +17,7 @@ public class StaircaseTreasure extends Treasure {
 
 	public static final Codec<StaircaseTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(
-			Registry.BLOCK.optionalFieldOf("stair_block", DEFAULT_STAIR_BLOCK).forGetter(treasure -> treasure.stairBlock),
+			Registry.BLOCK.getCodec().optionalFieldOf("stair_block", DEFAULT_STAIR_BLOCK).forGetter(treasure -> treasure.stairBlock),
 			Codec.BOOL.optionalFieldOf("bottom_stairs", true).forGetter(treasure -> treasure.bottomStairs)
 		).apply(instance, StaircaseTreasure::new);
 	});

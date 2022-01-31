@@ -9,15 +9,14 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class CenterTreasure extends Treasure {
 	private static final Random RANDOM = new Random();
 
-	private static final BlockStateProvider DEFAULT_CENTER_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.DIAMOND_BLOCK.getDefaultState());
-	private static final BlockStateProvider DEFAULT_X_AXIS_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.RED_STAINED_GLASS.getDefaultState());
-	private static final BlockStateProvider DEFAULT_Y_AXIS_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.LIME_STAINED_GLASS.getDefaultState());
-	private static final BlockStateProvider DEFAULT_Z_AXIS_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.BLUE_STAINED_GLASS.getDefaultState());
+	private static final BlockStateProvider DEFAULT_CENTER_STATE_PROVIDER = BlockStateProvider.of(Blocks.DIAMOND_BLOCK);
+	private static final BlockStateProvider DEFAULT_X_AXIS_STATE_PROVIDER = BlockStateProvider.of(Blocks.RED_STAINED_GLASS);
+	private static final BlockStateProvider DEFAULT_Y_AXIS_STATE_PROVIDER = BlockStateProvider.of(Blocks.LIME_STAINED_GLASS);
+	private static final BlockStateProvider DEFAULT_Z_AXIS_STATE_PROVIDER = BlockStateProvider.of(Blocks.BLUE_STAINED_GLASS);
 
 	public static final Codec<CenterTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(

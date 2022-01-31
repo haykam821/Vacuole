@@ -10,13 +10,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class BinaryTimerTreasure extends Treasure {
 	private static final Random RANDOM = new Random();
 
-	private static final BlockStateProvider DEFAULT_ON_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.BLACK_CONCRETE.getDefaultState());
-	private static final BlockStateProvider DEFAULT_OFF_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.WHITE_CONCRETE.getDefaultState());
+	private static final BlockStateProvider DEFAULT_ON_STATE_PROVIDER = BlockStateProvider.of(Blocks.BLACK_CONCRETE);
+	private static final BlockStateProvider DEFAULT_OFF_STATE_PROVIDER = BlockStateProvider.of(Blocks.WHITE_CONCRETE);
 
 	public static final Codec<BinaryTimerTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(

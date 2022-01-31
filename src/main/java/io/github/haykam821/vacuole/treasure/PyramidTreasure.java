@@ -9,10 +9,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 
 public class PyramidTreasure extends Treasure {
-	private static final BlockStateProvider DEFAULT_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.SANDSTONE.getDefaultState());
+	private static final BlockStateProvider DEFAULT_STATE_PROVIDER = BlockStateProvider.of(Blocks.SANDSTONE);
 
 	public static final Codec<PyramidTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(

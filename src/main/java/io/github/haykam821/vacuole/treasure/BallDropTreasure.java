@@ -23,7 +23,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 import xyz.nucleoid.plasmid.util.ItemStackBuilder;
 
 public class BallDropTreasure extends Treasure {
@@ -34,11 +33,11 @@ public class BallDropTreasure extends Treasure {
 	private static final int MILLISECONDS_PER_SECOND = 1000;
 	private static final long MILLISECONDS_PER_MINUTE = SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND;
 
-	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.SHROOMLIGHT.getDefaultState());
-	private static final BlockStateProvider DEFAULT_POLE_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.IRON_BARS.getDefaultState());
-	private static final BlockStateProvider DEFAULT_POLE_BASE_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.IRON_BLOCK.getDefaultState());
-	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.STONE_BUTTON.getDefaultState().with(StoneButtonBlock.FACE, WallMountLocation.FLOOR));
-	private static final BlockStateProvider DEFAULT_SIGN_STATE_PROVIDER = new SimpleBlockStateProvider(Blocks.ACACIA_WALL_SIGN.getDefaultState());
+	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = BlockStateProvider.of(Blocks.SHROOMLIGHT);
+	private static final BlockStateProvider DEFAULT_POLE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BARS);
+	private static final BlockStateProvider DEFAULT_POLE_BASE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BLOCK);
+	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = BlockStateProvider.of(Blocks.STONE_BUTTON.getDefaultState().with(StoneButtonBlock.FACE, WallMountLocation.FLOOR));
+	private static final BlockStateProvider DEFAULT_SIGN_STATE_PROVIDER = BlockStateProvider.of(Blocks.ACACIA_WALL_SIGN);
 	private static final ItemStack DEFAULT_FIREWORK = ItemStackBuilder.firework(COLOR.getFireworkColor(), 2, FireworkRocketItem.Type.SMALL_BALL).build();
 	private static final int DEFAULT_HEIGHT = 30;
 	private static final int DEFAULT_DROP_TICKS = -1;
