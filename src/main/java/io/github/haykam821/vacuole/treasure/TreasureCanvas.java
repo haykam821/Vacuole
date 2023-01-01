@@ -52,6 +52,10 @@ public class TreasureCanvas {
 		return this.bounds.max();
 	}
 
+	public BlockPos getSize() {
+		return this.bounds.size();
+	}
+
 	public BlockPos getCenter() {
 		return this.center;
 	}
