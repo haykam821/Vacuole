@@ -27,6 +27,7 @@ public final class TreasureTypes {
 	public static final TreasureType<BounceTreasure> BOUNCE = register("bounce", BounceTreasure.CODEC, BounceTreasure::new, Items.SLIME_BALL);
 	public static final TreasureType<BallDropTreasure> BALL_DROP = register("ball_drop", BallDropTreasure.CODEC, BallDropTreasure::new, Items.SHROOMLIGHT);
 	public static final TreasureType<WireworldTreasure> WIREWORLD = register("wireworld", WireworldTreasure.CODEC, WireworldTreasure::new, Items.COPPER_INGOT);
+	public static final TreasureType<GameOfLifeTreasure> GAME_OF_LIFE = register("game_of_life", GameOfLifeTreasure.CODEC, GameOfLifeTreasure::new, Items.FERN);
 
 	private static <T extends Treasure> TreasureType<T> register(String path, Codec<T> codec, Supplier<T> creator, Item icon) {
 		Identifier id = new Identifier(Main.MOD_ID, path);

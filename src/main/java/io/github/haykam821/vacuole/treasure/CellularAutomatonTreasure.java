@@ -1,6 +1,9 @@
 package io.github.haykam821.vacuole.treasure;
 
+import java.util.List;
+
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class CellularAutomatonTreasure extends Treasure {
@@ -68,6 +71,23 @@ public abstract class CellularAutomatonTreasure extends Treasure {
 		if (this.ticksUntilStep > 0) {
 			this.ticksUntilStep -= 1;
 			return;
+		}
+
+		// Pause if all entities are sneaking
+		List<Entity> entities = this.canvas.getEntities();
+
+		if (!entities.isEmpty()) {
+			boolean sneaking = true;
+
+			for (Entity entity : this.canvas.getEntities()) {
+				if (!entity.isSneaking()) {
+					sneaking = false;
+				}
+			}
+
+			if (sneaking) {
+				return;
+			}
 		}
 
 		byte[][] nextGrid = new byte[this.size.getX() + 1][this.size.getZ() + 1];
