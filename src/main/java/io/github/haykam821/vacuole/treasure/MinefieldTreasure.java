@@ -1,7 +1,5 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -11,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.TntEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class MinefieldTreasure extends Treasure {
@@ -22,7 +21,7 @@ public class MinefieldTreasure extends Treasure {
 		).apply(instance, MinefieldTreasure::new);
 	});
 
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 	private static final BlockState BARRIER = Blocks.BARRIER.getDefaultState();
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
 
@@ -44,7 +43,7 @@ public class MinefieldTreasure extends Treasure {
 
 	@Override
 	protected BlockState getBase(BlockPos pos) {
-		return this.floorStateProvider.getBlockState(RANDOM, pos);
+		return this.floorStateProvider.get(RANDOM, pos);
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class MinefieldTreasure extends Treasure {
 			for (int z = this.canvas.getMin().getZ(); z <= this.canvas.getMax().getZ(); z++) {
 				if (this.mineChance < RANDOM.nextDouble()) {
 					pos.setZ(z);
-					this.canvas.setBlockState(pos, this.mineStateProvider.getBlockState(RANDOM, pos));
+					this.canvas.setBlockState(pos, this.mineStateProvider.get(RANDOM, pos));
 				}
 			}
 		}

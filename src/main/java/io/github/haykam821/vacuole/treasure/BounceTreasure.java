@@ -1,17 +1,16 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class BounceTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = BlockStateProvider.of(Blocks.SLIME_BLOCK);
 	private static final BlockStateProvider DEFAULT_TRAIL_STATE_PROVIDER = BlockStateProvider.of(Blocks.LIME_CARPET);
@@ -76,7 +75,7 @@ public class BounceTreasure extends Treasure {
 			int z = MathHelper.nextBetween(RANDOM, min.getZ() + 1, max.getZ() - 1);
 			this.pos = new BlockPos(x, min.getY() + 1, z);
 		} else {
-			this.canvas.setBlockState(this.pos, this.trailStateProvider.getBlockState(RANDOM, this.pos));
+			this.canvas.setBlockState(this.pos, this.trailStateProvider.get(RANDOM, this.pos));
 		}
 
 		if (this.isOnEdgeX()) {
@@ -87,7 +86,7 @@ public class BounceTreasure extends Treasure {
 		}
 
 		this.pos = this.pos.add(up ? 1 : -1, 0, right ? 1 : -1);
-		this.canvas.setBlockState(this.pos, this.ballStateProvider.getBlockState(RANDOM, this.pos));
+		this.canvas.setBlockState(this.pos, this.ballStateProvider.get(RANDOM, this.pos));
 
 		this.ticksUntilMove = this.maxTicksUntilMove;
 	}

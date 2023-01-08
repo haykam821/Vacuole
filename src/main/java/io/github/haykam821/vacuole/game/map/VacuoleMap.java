@@ -2,7 +2,7 @@ package io.github.haykam821.vacuole.game.map;
 
 import java.util.Iterator;
 
-import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Box;
@@ -43,7 +43,7 @@ public class VacuoleMap {
 	public Vec2f getSpawnRotation() {
 		TemplateRegion spawn = this.template.getMetadata().getFirstRegion("spawn");
 		if (spawn != null) {
-			NbtList tag = spawn.getData().getList("Rotation", NbtType.FLOAT);
+			NbtList tag = spawn.getData().getList("Rotation", NbtElement.FLOAT_TYPE);
 			return  new Vec2f(tag.getFloat(0), tag.getFloat(1));
 		}
 

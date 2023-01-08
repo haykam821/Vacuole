@@ -1,17 +1,16 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class CenterTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private static final BlockStateProvider DEFAULT_CENTER_STATE_PROVIDER = BlockStateProvider.of(Blocks.DIAMOND_BLOCK);
 	private static final BlockStateProvider DEFAULT_X_AXIS_STATE_PROVIDER = BlockStateProvider.of(Blocks.RED_STAINED_GLASS);
@@ -53,7 +52,7 @@ public class CenterTreasure extends Treasure {
 		super.build();
 
 		BlockPos.Mutable pos = this.canvas.getCenter().mutableCopy();
-		this.canvas.setBlockState(pos, this.centerStateProvider.getBlockState(RANDOM, pos));
+		this.canvas.setBlockState(pos, this.centerStateProvider.get(RANDOM, pos));
 
 		if (this.axisLength != 0) {
 			this.buildAxis(pos, this.xAxisStateProvider, Direction.Axis.X);
@@ -70,7 +69,7 @@ public class CenterTreasure extends Treasure {
 
 		for (int offset = 1; offset <= Math.abs(this.axisLength); offset++) {
 			pos.move(direction);
-			this.canvas.setBlockState(pos, stateProvider.getBlockState(RANDOM, pos));
+			this.canvas.setBlockState(pos, stateProvider.get(RANDOM, pos));
 		}
 	}
 }

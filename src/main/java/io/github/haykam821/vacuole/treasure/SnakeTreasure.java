@@ -2,7 +2,6 @@ package io.github.haykam821.vacuole.treasure;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 
 public class SnakeTreasure extends Treasure {
 	public static final Codec<SnakeTreasure> CODEC = RecordCodecBuilder.create(instance -> {
@@ -20,7 +20,7 @@ public class SnakeTreasure extends Treasure {
 		).apply(instance, SnakeTreasure::new);
 	});
 
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 	private static final BlockState SNAKE = Blocks.LIME_TERRACOTTA.getDefaultState();
 	private static final BlockState AIR = Blocks.AIR.getDefaultState();
 

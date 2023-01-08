@@ -8,16 +8,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 public class StaircaseTreasure extends Treasure {
 	private static final Block DEFAULT_STAIR_BLOCK = Blocks.BRICK_STAIRS;
 
 	public static final Codec<StaircaseTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(
-			Registry.BLOCK.getCodec().optionalFieldOf("stair_block", DEFAULT_STAIR_BLOCK).forGetter(treasure -> treasure.stairBlock),
+			Registries.BLOCK.getCodec().optionalFieldOf("stair_block", DEFAULT_STAIR_BLOCK).forGetter(treasure -> treasure.stairBlock),
 			Codec.BOOL.optionalFieldOf("bottom_stairs", true).forGetter(treasure -> treasure.bottomStairs)
 		).apply(instance, StaircaseTreasure::new);
 	});

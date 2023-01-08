@@ -1,13 +1,12 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class PyramidTreasure extends Treasure {
@@ -21,7 +20,7 @@ public class PyramidTreasure extends Treasure {
 		).apply(instance, PyramidTreasure::new);
 	});
 
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private final int step;
 	private final int padding;
@@ -68,7 +67,7 @@ public class PyramidTreasure extends Treasure {
 
 						if (z >= minPyramidZ && z <= maxPyramidZ) {
 							pos.set(x, y, z);
-							this.canvas.setBlockState(pos, this.stateProvider.getBlockState(RANDOM, pos));
+							this.canvas.setBlockState(pos, this.stateProvider.get(RANDOM, pos));
 						}
 					}
 				}

@@ -1,7 +1,5 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -9,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class SierpinskiCarpetTreasure extends Treasure {
@@ -21,7 +20,7 @@ public class SierpinskiCarpetTreasure extends Treasure {
 		).apply(instance, SierpinskiCarpetTreasure::new);
 	});
 
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private final int padding;
 	private final BlockStateProvider stateProvider;
@@ -61,7 +60,7 @@ public class SierpinskiCarpetTreasure extends Treasure {
 			for (int z = 0; z < size; z++) {
 				pos.setZ(minZ + paddingZ + z);
 				if (this.isBlock(x, z)) {
-					this.canvas.setBlockState(pos, this.stateProvider.getBlockState(RANDOM, pos));
+					this.canvas.setBlockState(pos, this.stateProvider.get(RANDOM, pos));
 				}
 			}
 		}

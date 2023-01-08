@@ -1,7 +1,5 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -9,10 +7,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class SpiralTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private static final BlockStateProvider DEFAULT_PRIMARY_STATE_PROVIDER = BlockStateProvider.of(Blocks.PURPUR_BLOCK);
 	private static final BlockStateProvider DEFAULT_SECONDARY_STATE_PROVIDER = BlockStateProvider.of(Blocks.END_STONE_BRICKS);
@@ -40,7 +39,7 @@ public class SpiralTreasure extends Treasure {
 	
 	@Override
 	protected BlockState getBase(BlockPos pos) {
-		return this.secondaryStateProvider.getBlockState(RANDOM, pos);
+		return this.secondaryStateProvider.get(RANDOM, pos);
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class SpiralTreasure extends Treasure {
 			boolean parallel = direction.getAxis() == Direction.Axis.X;
 
 			for (int index = 0; index < (parallel ? sizeX : sizeZ); index++) {
-				BlockState state = this.primaryStateProvider.getBlockState(RANDOM, pos);
+				BlockState state = this.primaryStateProvider.get(RANDOM, pos);
 				this.canvas.setBlockState(pos, state);
 
 				pos.move(direction);

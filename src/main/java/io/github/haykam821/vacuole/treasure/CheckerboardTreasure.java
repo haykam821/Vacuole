@@ -1,17 +1,16 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class CheckerboardTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private static final BlockStateProvider DEFAULT_PRIMARY_STATE_PROVIDER = BlockStateProvider.of(Blocks.BLACK_CONCRETE);
 	private static final BlockStateProvider DEFAULT_SECONDARY_STATE_PROVIDER = BlockStateProvider.of(Blocks.WHITE_CONCRETE);
@@ -48,9 +47,9 @@ public class CheckerboardTreasure extends Treasure {
 		int z = (pos.getZ() - min.getZ()) / this.scale;
 
 		if ((x + z) % 2 == 0) {
-			return this.primaryStateProvider.getBlockState(RANDOM, pos);
+			return this.primaryStateProvider.get(RANDOM, pos);
 		} else {
-			return this.secondaryStateProvider.getBlockState(RANDOM, pos);
+			return this.secondaryStateProvider.get(RANDOM, pos);
 		}
 	}
 }

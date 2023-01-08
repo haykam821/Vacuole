@@ -1,7 +1,5 @@
 package io.github.haykam821.vacuole.treasure;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
@@ -12,21 +10,22 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SkullBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class SkullsTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 
 	private static final Block DEFAULT_SKULL_BLOCK = Blocks.SKELETON_SKULL;
 	private static final BlockStateProvider DEFAULT_POST_STATE_PROVIDER = BlockStateProvider.of(Blocks.DEEPSLATE_TILE_WALL);
 
 	public static final Codec<SkullsTreasure> CODEC = RecordCodecBuilder.create(instance -> {
 		return instance.group(
-			Registry.BLOCK.getCodec().optionalFieldOf("skull_block", DEFAULT_SKULL_BLOCK).forGetter(treasure -> treasure.skullBlock),
+			Registries.BLOCK.getCodec().optionalFieldOf("skull_block", DEFAULT_SKULL_BLOCK).forGetter(treasure -> treasure.skullBlock),
 			BlockStateProvider.TYPE_CODEC.optionalFieldOf("post_state_provider", DEFAULT_POST_STATE_PROVIDER).forGetter(treasure -> treasure.postStateProvider),
 			Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("height", 1).forGetter(treasure -> treasure.height),
 			Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("count", 8).forGetter(treasure -> treasure.count)
@@ -76,7 +75,7 @@ public class SkullsTreasure extends Treasure {
 			
 			pos.move(Direction.DOWN);
 			while (pos.getY() > minY) {
-				this.canvas.setBlockState(pos, this.postStateProvider.getBlockState(RANDOM, pos));
+				this.canvas.setBlockState(pos, this.postStateProvider.get(RANDOM, pos));
 				pos.move(Direction.DOWN);
 			}
 		}

@@ -1,7 +1,6 @@
 package io.github.haykam821.vacuole.treasure;
 
 import java.util.Iterator;
-import java.util.Random;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,7 +9,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.StoneButtonBlock;
+import net.minecraft.block.ButtonBlock;
 import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -18,15 +17,16 @@ import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import xyz.nucleoid.plasmid.util.ItemStackBuilder;
 
 public class BallDropTreasure extends Treasure {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = Random.create();
 	private static final DyeColor COLOR = DyeColor.ORANGE;
 
 	private static final int SECONDS_PER_MINUTE = 60;
@@ -36,7 +36,7 @@ public class BallDropTreasure extends Treasure {
 	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = BlockStateProvider.of(Blocks.SHROOMLIGHT);
 	private static final BlockStateProvider DEFAULT_POLE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BARS);
 	private static final BlockStateProvider DEFAULT_POLE_BASE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BLOCK);
-	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = BlockStateProvider.of(Blocks.STONE_BUTTON.getDefaultState().with(StoneButtonBlock.FACE, WallMountLocation.FLOOR));
+	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = BlockStateProvider.of(Blocks.STONE_BUTTON.getDefaultState().with(ButtonBlock.FACE, WallMountLocation.FLOOR));
 	private static final BlockStateProvider DEFAULT_SIGN_STATE_PROVIDER = BlockStateProvider.of(Blocks.ACACIA_WALL_SIGN);
 	private static final ItemStack DEFAULT_FIREWORK = ItemStackBuilder.firework(COLOR.getFireworkColor(), 2, FireworkRocketItem.Type.SMALL_BALL).build();
 	private static final int DEFAULT_HEIGHT = 30;
@@ -87,7 +87,7 @@ public class BallDropTreasure extends Treasure {
 		int z = center.getZ();
 
 		for (BlockPos pos : BlockPos.iterate(x - 1, y, z - 1, x + 1, y, z + 1)) {
-			this.canvas.setBlockState(pos, this.poleBaseStateProvider.getBlockState(RANDOM, pos));
+			this.canvas.setBlockState(pos, this.poleBaseStateProvider.get(RANDOM, pos));
 		}
 	}
 
@@ -108,7 +108,7 @@ public class BallDropTreasure extends Treasure {
 			pos.set(center);
 			pos.move(direction);
 
-			BlockState state = line == null ? Blocks.AIR.getDefaultState() : this.signStateProvider.getBlockState(RANDOM, pos)
+			BlockState state = line == null ? Blocks.AIR.getDefaultState() : this.signStateProvider.get(RANDOM, pos)
 				.with(WallSignBlock.FACING, direction);
 			this.canvas.setBlockState(pos, state);
 
@@ -118,7 +118,7 @@ public class BallDropTreasure extends Treasure {
 					sign.setGlowingText(true);
 					sign.setTextColor(COLOR);
 
-					sign.setTextOnRow(1, new LiteralText(line));
+					sign.setTextOnRow(1, Text.literal(line));
 
 					this.updateSign(sign);
 				}
@@ -128,9 +128,9 @@ public class BallDropTreasure extends Treasure {
 
 	private BlockState getPoleState(BlockPos pos, boolean ball) {
 		if (ball) {
-			return this.ballStateProvider.getBlockState(RANDOM, pos);
+			return this.ballStateProvider.get(RANDOM, pos);
 		} else {
-			return this.poleStateProvider.getBlockState(RANDOM, pos);
+			return this.poleStateProvider.get(RANDOM, pos);
 		}
 	}
 
@@ -160,7 +160,7 @@ public class BallDropTreasure extends Treasure {
 
 	private void buildButton() {
 		BlockPos pos = this.getButtonPos();
-		this.canvas.setBlockState(pos, this.buttonStateProvider.getBlockState(RANDOM, pos));
+		this.canvas.setBlockState(pos, this.buttonStateProvider.get(RANDOM, pos));
 	}
 
 	private void spawnFireworks() {

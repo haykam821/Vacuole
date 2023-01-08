@@ -16,7 +16,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -161,12 +160,12 @@ public class VacuoleGame {
 
 		switch (state) {
 			case TRUE:
-				return new TranslatableText("text.vacuole.toggle_locked.locked", ordinal).formatted(Formatting.GOLD);
+				return Text.translatable("text.vacuole.toggle_locked.locked", ordinal).formatted(Formatting.GOLD);
 			case FALSE:
-				return new TranslatableText("text.vacuole.toggle_locked.unlocked", ordinal).formatted(Formatting.DARK_PURPLE);
+				return Text.translatable("text.vacuole.toggle_locked.unlocked", ordinal).formatted(Formatting.DARK_PURPLE);
 			case DEFAULT:
 			default:
-				return new TranslatableText("text.vacuole.toggle_locked.cannot", ordinal).formatted(Formatting.RED);
+				return Text.translatable("text.vacuole.toggle_locked.cannot", ordinal).formatted(Formatting.RED);
 		}
 	}
 
@@ -181,7 +180,7 @@ public class VacuoleGame {
 
 				Treasure treasure = this.getTreasure(index);
 				if (!treasure.isModifiable(player)) {
-					player.sendMessage(new TranslatableText("text.vacuole.cannot_modify_treasure", index + 1).formatted(Formatting.RED), true);
+					player.sendMessage(Text.translatable("text.vacuole.cannot_modify_treasure", index + 1).formatted(Formatting.RED), true);
 					return ActionResult.FAIL;
 				}
 

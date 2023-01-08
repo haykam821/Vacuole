@@ -8,7 +8,6 @@ import io.github.haykam821.vacuole.game.VacuoleGame;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.plasmid.registry.TinyRegistry;
 import xyz.nucleoid.plasmid.shop.Cost;
@@ -45,7 +44,7 @@ public class TreasureType<T extends Treasure> {
 	}
 
 	public Text getName() {
-		return new TranslatableText(this.getTranslationKey());
+		return Text.translatable(this.getTranslationKey());
 	}
 
 	public ShopEntry createShopEntry(VacuoleGame game, int index) {

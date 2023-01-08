@@ -6,13 +6,13 @@ import io.github.haykam821.vacuole.game.VacuoleGame;
 import io.github.haykam821.vacuole.treasure.TreasureType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class TreasureSelector {
 	public static SimpleGui build(ServerPlayerEntity player, VacuoleGame game, int index) {
 		SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X5, false);
 
-		builder.setTitle(new TranslatableText("text.vacuole.treasure_selector", index + 1));
+		builder.setTitle(Text.translatable("text.vacuole.treasure_selector", index + 1));
 
 		for (TreasureType<?> type : TreasureType.REGISTRY.values()) {
 			builder.addSlot(type.createShopEntry(game, index));
