@@ -38,7 +38,7 @@ public class TreasureCanvas {
 		this.world = world;
 		this.bounds = bounds;
 
-		this.center = new BlockPos(bounds.center());
+		this.center = BlockPos.ofFloored(bounds.center());
 		this.bottomCenter = new BlockPos(this.center.getX(), bounds.min().getY(), this.center.getZ());
 		
 		this.creator = creator;
