@@ -1,5 +1,7 @@
 package io.github.haykam821.vacuole.command;
 
+import java.util.Set;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 
@@ -18,11 +20,17 @@ public final class VacuoleCommand {
 	}
 
 	private static int list(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(Text.translatable("command.vacuole.treasure.list.header", TreasureType.REGISTRY.keySet().size()), false);
+		Set<Identifier> ids = TreasureType.REGISTRY.keySet();
 
-		for (Identifier id : TreasureType.REGISTRY.keySet()) {
-			TreasureType<?> treasure = TreasureType.REGISTRY.get(id);
-			context.getSource().sendFeedback(Text.translatable("command.vacuole.treasure.list.entry", treasure.getName()), false);
+		context.getSource().sendFeedback(() -> {
+			return Text.translatable("command.vacuole.treasure.list.header", ids.size());
+		}, false);
+
+		for (Identifier id : ids) {
+			context.getSource().sendFeedback(() -> {
+				TreasureType<?> treasure = TreasureType.REGISTRY.get(id);
+				return Text.translatable("command.vacuole.treasure.list.entry", treasure.getName());
+			}, false);
 		}
 
 		return 0;

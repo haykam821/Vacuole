@@ -6,13 +6,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.SharedConstants;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ButtonBlock;
 import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
@@ -91,13 +91,6 @@ public class BallDropTreasure extends Treasure {
 		}
 	}
 
-	private void updateSign(SignBlockEntity sign) {
-		sign.markDirty();
-
-		BlockState cachedState = sign.getCachedState();
-		sign.getWorld().updateListeners(sign.getPos(), cachedState, cachedState, Block.NOTIFY_ALL);
-	}
-
 	private void buildSigns(BlockPos center, String line) {
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 
@@ -115,12 +108,12 @@ public class BallDropTreasure extends Treasure {
 			if (line != null) {
 				SignBlockEntity sign = this.canvas.getBlockEntity(pos, BlockEntityType.SIGN);
 				if (sign != null) {
-					sign.setGlowingText(true);
-					sign.setTextColor(COLOR);
+					SignText signText = sign.getFrontText()
+						.withGlowing(true)
+						.withColor(COLOR)
+						.withMessage(1, Text.literal(line));
 
-					sign.setTextOnRow(1, Text.literal(line));
-
-					this.updateSign(sign);
+					sign.setText(signText, true);
 				}
 			}
 		}
