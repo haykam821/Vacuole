@@ -13,7 +13,7 @@ import net.minecraft.block.WallSignBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
-import net.minecraft.block.enums.WallMountLocation;
+import net.minecraft.block.enums.BlockFace;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,7 +36,7 @@ public class BallDropTreasure extends Treasure {
 	private static final BlockStateProvider DEFAULT_BALL_STATE_PROVIDER = BlockStateProvider.of(Blocks.SHROOMLIGHT);
 	private static final BlockStateProvider DEFAULT_POLE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BARS);
 	private static final BlockStateProvider DEFAULT_POLE_BASE_STATE_PROVIDER = BlockStateProvider.of(Blocks.IRON_BLOCK);
-	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = BlockStateProvider.of(Blocks.STONE_BUTTON.getDefaultState().with(ButtonBlock.FACE, WallMountLocation.FLOOR));
+	private static final BlockStateProvider DEFAULT_BUTTON_STATE_PROVIDER = BlockStateProvider.of(Blocks.STONE_BUTTON.getDefaultState().with(ButtonBlock.FACE, BlockFace.FLOOR));
 	private static final BlockStateProvider DEFAULT_SIGN_STATE_PROVIDER = BlockStateProvider.of(Blocks.ACACIA_WALL_SIGN);
 	private static final ItemStack DEFAULT_FIREWORK = ItemStackBuilder.firework(COLOR.getFireworkColor(), 2, FireworkRocketItem.Type.SMALL_BALL).build();
 	private static final int DEFAULT_HEIGHT = 30;
